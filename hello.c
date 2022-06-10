@@ -14,3 +14,10 @@ int main() {
     printf("%d ", fib(10));
     return 0;
 }
+
+// TAD (tipo abstrato de dados)
+typedef struct {
+    int dia;
+    int mes;
+    int ano;
+} Data;
