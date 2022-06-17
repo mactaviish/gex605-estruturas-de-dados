@@ -1,5 +1,4 @@
 // questao 2
-
 #include <stdio.h>
 
 typedef struct {
