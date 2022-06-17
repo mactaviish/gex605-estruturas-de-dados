@@ -1,3 +1,4 @@
+// questao 1
 #include <stdio.h>
 
 int resto(int minuendo, int subtraendo) {
