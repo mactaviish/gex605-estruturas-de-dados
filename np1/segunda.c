@@ -25,7 +25,7 @@ Complexo sumComplex(Complexo num1, Complexo num2) {
 }
 
 void printComplex(Complexo num) {
-	printf("%f + %f i", num.a, num.b);
+	printf("%lf + %lf i", num.a, num.b);
 }
 
 int main() {
