@@ -8,6 +8,8 @@ int resto(int minuendo, int subtraendo) {
 		result = minuendo;
 	if (minuendo >= subtraendo)
 		result = resto(minuendo - subtraendo, subtraendo);
+	
+	return result;
 }
 
 int main() {
