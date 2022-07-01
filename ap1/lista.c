@@ -17,8 +17,21 @@ struct _aluno {
 
 typedef struct _aluno Aluno;
 
-Aluno *addAluno(Aluno *first, Aluno *new) {
-    Aluno *aux;
+Aluno *createAluno() {
+    Aluno *aux = malloc(sizeof(Aluno));
+
+    scanf("%s", &aux->matricula);
+    scanf("%s", &aux->nome);
+    scanf("%d/%d/%d", &aux->data_nascimento.dia, &aux->data_nascimento.mes, &aux->data_nascimento.ano);
+    scanf("%f", &aux->nota);
+    aux->next = NULL;
+
+    return aux;
+}
+
+Aluno *addAluno(Aluno *first) {
+    Aluno *aux, *new;
+    new = createAluno();
 
     if (first == NULL)
         return new;
@@ -30,18 +43,6 @@ Aluno *addAluno(Aluno *first, Aluno *new) {
     
     aux->next = new;
     return first;
-}
-
-Aluno *createAluno() {
-    Aluno *aux = malloc(sizeof(Aluno));
-
-    scanf("%s", &aux->matricula);
-    scanf("%s", &aux->nome);
-    scanf("%d/%d/%d", &aux->data_nascimento.dia, &aux->data_nascimento.mes, &aux->data_nascimento.ano);
-    scanf("%f", &aux->nota);
-    aux->next = NULL;
-
-    return aux;
 }
 
 void deleteAluno(Aluno *first) {
@@ -152,7 +153,7 @@ int main() {
         scanf("%d", &opcao);
         switch (opcao) {
             case 1:
-                first = addAluno(first, createAluno());
+                first = addAluno(first);
                 break;
             case 2:
                 deleteAluno(first);
