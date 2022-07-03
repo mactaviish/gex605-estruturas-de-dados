@@ -46,33 +46,31 @@ Aluno *addAluno(Aluno *first) {
 }
 
 void deleteAluno(Aluno *first) {
-    Aluno *aux, *previous=first;
+    Aluno *aux, *previous;
     char matricula[10];
-
-    scanf("%s", matricula);
 
     if (first == NULL) {
         printf("Lista Vazia!\n");
         return;
     }
 
-    if (strcmp(first->matricula, matricula) == 0) {
-        aux = first;
-        first = first->next;
-        free(aux);
-        return;
-    }
+    scanf("%s", matricula);
 
-    aux = first;
-    while (aux->next != NULL) {
-        if (strcmp(aux->next->matricula, matricula) == 0) {
-            Aluno *aux2 = aux->next;
-            aux->next = aux->next->next;
-            free(aux2);
-            return;
+    for (aux=first; aux != NULL; aux=aux->next) {
+        if (strcmp(aux->matricula, matricula) == 0) {
+            if (aux == first) {
+                first = aux->next;
+                break;
+            }
+            previous->next = aux->next;
+            break;
         }
-        aux = aux->next;
+        previous = aux;
     }
+    
+    if (aux != NULL)
+        free(aux);
+    return;
 }
 
 void listAluno(Aluno *first) {
