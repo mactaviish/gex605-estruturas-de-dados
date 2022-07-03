@@ -18,7 +18,7 @@ struct _aluno {
 typedef struct _aluno Aluno;
 
 Aluno *createAluno() {
-    Aluno *aux = malloc(sizeof(Aluno));
+    Aluno *aux = (Aluno *)malloc(sizeof(Aluno));
 
     scanf("%s", &aux->matricula);
     scanf("%s", &aux->nome);
@@ -46,14 +46,15 @@ Aluno *addAluno(Aluno *first) {
 }
 
 void deleteAluno(Aluno *first) {
-    Aluno *aux;
+    Aluno *aux, *previous=first;
     char matricula[10];
 
     scanf("%s", matricula);
 
-    if (first == NULL)
+    if (first == NULL) {
         printf("Lista Vazia!\n");
         return;
+    }
 
     if (strcmp(first->matricula, matricula) == 0) {
         aux = first;
@@ -77,13 +78,14 @@ void deleteAluno(Aluno *first) {
 void listAluno(Aluno *first) {
     Aluno *aux;
 
-    if (first == NULL)
+    if (first == NULL) {
         printf("Lista Vazia!\n");
         return;
+    }
 
     aux = first;
     while (aux != NULL) {
-        printf("%s, %s, %d/%d/%d %.2f\n", aux->matricula, aux->nome, aux->data_nascimento.dia, aux->data_nascimento.mes, aux->data_nascimento.ano, aux->nota);
+        printf("%s, %s, %d/%d/%d, %.2f\n", aux->matricula, aux->nome, aux->data_nascimento.dia, aux->data_nascimento.mes, aux->data_nascimento.ano, aux->nota);
         aux = aux->next;
     }
 }
@@ -91,9 +93,10 @@ void listAluno(Aluno *first) {
 void inverseListAluno(Aluno *first) {
     Aluno *aux;
 
-    if (first == NULL)
+    if (first == NULL) {
         printf("Lista Vazia!\n");
         return;
+    }
 
     aux = first;
     while (aux->next != NULL) {
@@ -101,7 +104,7 @@ void inverseListAluno(Aluno *first) {
     }
 
     while (aux != NULL) {
-        printf("%s, %s, %d/%d/%d %.2f\n", aux->matricula, aux->nome, aux->data_nascimento.dia, aux->data_nascimento.mes, aux->data_nascimento.ano, aux->nota);
+        printf("%s, %s, %d/%d/%d, %.2f\n", aux->matricula, aux->nome, aux->data_nascimento.dia, aux->data_nascimento.mes, aux->data_nascimento.ano, aux->nota);
         aux = aux->next;
     }
 }
@@ -110,9 +113,10 @@ void countAluno(Aluno *first) {
     Aluno *aux;
     int count = 0;
 
-    if (first == NULL)
+    if (first == NULL) {
         printf("Lista Vazia!\n");
         return;
+    }
 
     aux = first;
     while (aux != NULL) {
@@ -140,16 +144,16 @@ void cleanMemory(Aluno *first) {
 
 int main() {
     int opcao;
-    Aluno *first = NULL;
+    Aluno *first=NULL;
+
+    printf("Opção 1: Incluir elemento na lista\n");
+    printf("Opção 2: Excluir elemento da lista\n");
+    printf("Opção 3: Listar todos os elementos da lista na ordem de inclusão\n");
+    printf("Opção 4: Listar todos os elementos da lista na ordem inversa a inclusão\n");
+    printf("Opção 5: Apresentar quantos elementos existem na lista\n");
+    printf("Opção 0: Sair do programa\n");
 
     while (opcao != 0) {
-        printf("Opção 1: Incluir elemento na lista\n");
-        printf("Opção 2: Excluir elemento da lista\n");
-        printf("Opção 3: Listar todos os elementos da lista na ordem de inclusão\n");
-        printf("Opção 4: Listar todos os elementos da lista na ordem inversa a inclusão\n");
-        printf("Opção 5: Apresentar quantos elementos existem na lista\n");
-        printf("Opção 0: Sair do programa\n");
-
         scanf("%d", &opcao);
         switch (opcao) {
             case 1:
@@ -166,6 +170,9 @@ int main() {
                 break;
             case 5:
                 countAluno(first);
+                break;
+            case 0:
+                cleanMemory(first);
                 break;
         }
     }
