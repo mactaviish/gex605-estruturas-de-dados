@@ -18,8 +18,8 @@ typedef struct {
     Funcionario *last;
 } List;
 
-int isEmptyList(List *l) {
-    return l->first == NULL;
+int isEmptyList(List *list) {
+    return list->first == NULL;
 }
 
 Funcionario *magic(List *list, int cod) {
@@ -37,6 +37,7 @@ void addHead(List *list, Funcionario *new) {
         list->last = new;
     } else {
         new->next = list->first;
+        list->first->prev = new;
         list->first = new;
     }
 }
@@ -70,13 +71,16 @@ void deleteElement(List *list, int cod) {
 
     if (aux == list->first) {
         list->first = list->first->next;
+        free(aux);
         list->first->prev = NULL;
     } else
     if (aux == list->last) {
         list->last = list->last->prev;
+        free(aux);
         list->last->next = NULL;
     } else {
         aux->prev->next = aux->next;
+        free(aux);
         aux->next->prev = aux->prev;
     }
 }
@@ -91,6 +95,14 @@ Funcionario *createFunc(int cod, char nome[N], double salario) {
     return new;
 }
 
+void printList(List *list) {
+    Funcionario *aux;
+    
+    for (aux = list->first; aux != NULL; aux = aux->next) {
+        printf("id: %d\nsalario: %.2f\n--\n", aux->cod, aux->salario);
+    }
+}
+
 int main() {
     int i;
     Funcionario *aux;
@@ -98,13 +110,14 @@ int main() {
     list->first = NULL;
     list->last = NULL;
 
-    for (i = 1; i <= 5; i++) {
-        addHead(list, createFunc(i, "Joao", (i * 1000)));
-    }
-
-    for (aux = list->first; aux != NULL; aux = aux->next) {
-        printf("id>%d | salario>%f", aux->cod, aux->salario);
-    }
+    addTail(list, createFunc(1, "Joao", 1000));
+    addTail(list, createFunc(2, "Joana", 2000));
+    addTail(list, createFunc(3, "Maria", 3000));
+    addTail(list, createFunc(4, "Rafael", 4000));
+    addTail(list, createFunc(5, "Yuri", 5000));
+    printList(list);
 
     return 0;
 }
+
+// popmalinha
