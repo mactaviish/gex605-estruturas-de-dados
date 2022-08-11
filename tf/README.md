@@ -1,7 +1,7 @@
 # Resolução do Trabalho Final
 
 <pre>
-gcc -Wall final.c -o execute
+gcc -Wall bodega.c -o execute
 
 ./execute
 </pre>
