@@ -13,3 +13,14 @@ struct _bebida {
     struct _bebida *next;
 };
 typedef struct _bebida Bebida;
+
+struct _cliente {
+    int codigo;
+    char nome[50];
+    int cpf;
+    int idade;
+    int fiado;
+    struct _cliente *prev;
+    struct _cliente *next;
+};
+typedef struct _cliente Cliente;
