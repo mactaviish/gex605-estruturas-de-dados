@@ -1,10 +1,5 @@
 #include <stdio.h>
-
-
-typedef struct {
-    char nome[50];
-    int cnpj;
-} Empresa;
+#include "utils.h"
 
 int main() {
 
