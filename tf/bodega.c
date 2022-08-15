@@ -2,7 +2,6 @@
 #include "utils.h"
 
 void printMenu() {
-    system(“clear”);
     printf("Escolha uma das opções abaixo:\n");
     printf("[ 1 ] Cadastrar bebida\n");
     printf("[ 2 ] Mostrar bebidas\n");
@@ -13,8 +12,43 @@ void printMenu() {
     printf("[ 0 ] Sair do sistema\n");
 }
 
+void cadastraBebida(ListaBebidas *list) {
+    Bebida new = malloc(sizeof(Bebida));
+    printf("Código:\n");
+    scanf("%d", &new->codigo);
+    printf("Nome:\n");
+    scanf("%s", new->nome);
+    printf("Conteúdo:\n");
+    scanf("%s", new->conteudo);
+    printf("Preço:\n");
+    scanf("%f", &new->preco);
+    printf("Quantidade:\n");
+    scanf("%d", &new->quantidade);
+    new->next = NULL;
+
+    if (list->first == NULL) {
+        list->first = new;
+    } else {
+        list->last->next = new;
+    }
+    list->last = new;
+}
+
 int main() {
-    printMenu();
+    ListaBebidas *bebList = malloc(sizeof(ListaBebidas));
+    bebList->first = NULL;
+    bebList->last = NULL;
+
+    int opcao;
+    while (true) {
+        printMenu();
+        scanf("%d", &opcao);
+        switch (opcao) {
+            case 1:
+                cadastraBebida(bebList);
+                break;
+        }
+    }
 
     return 0;
 }

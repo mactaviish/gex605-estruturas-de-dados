@@ -14,6 +14,11 @@ struct _bebida {
 };
 typedef struct _bebida Bebida;
 
+typedef struct {
+    Bebida *first;
+    Bebida *last;
+} ListaBebidas;
+
 struct _cliente {
     int codigo;
     char nome[50];
@@ -24,3 +29,8 @@ struct _cliente {
     struct _cliente *next;
 };
 typedef struct _cliente Cliente;
+
+typedef struct {
+    Cliente *first;
+    Cliente *last;
+} ListaClientes;
