@@ -15,7 +15,7 @@ void printMenu() {
     printf("> ");
 }
 
-Bebida *magic(ListaBebidas *list, int cod) {
+Bebida *buscaBebida(ListaBebidas *list, int cod) {
     Bebida *aux = list->first;
     while (aux != NULL) {
         if (aux->codigo == cod) {
@@ -35,7 +35,7 @@ void cadastraBebida(ListaBebidas *list) {
         printf("Cadastro de Bebidas\n\n");
         printf("Código: ");
         scanf("%d", &new->codigo);
-        if (magic(list, new->codigo) != NULL) {
+        if (buscaBebida(list, new->codigo) != NULL) {
             printf("Código %d já cadastrado!\n", new->codigo);
             system("sleep 3");
             continue;
