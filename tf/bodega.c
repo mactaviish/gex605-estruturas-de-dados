@@ -98,6 +98,7 @@ int main() {
                 break;
             case 2:
                 mostraBebidas(bebList);
+                break;
             default:
                 invalidOption();
                 break;
