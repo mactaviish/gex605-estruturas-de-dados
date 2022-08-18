@@ -63,6 +63,18 @@ void cadastraBebida(ListaBebidas *list) {
     list->last = new;
 }
 
+void mostraBebidas(ListaBebidas *list) {
+    Bebida *aux = list->first;
+    while (aux != NULL) {
+        printf("Código: %d\n", aux->codigo);
+        printf("Nome: %s\n", aux->nome);
+        printf("Conteúdo: %d\n", aux->conteudo);
+        printf("Preço: %.2lf\n", aux->preco);
+        printf("Quantidade: %d\n", aux->estoque);
+        aux = aux->next;
+    }
+}
+
 void invalidOption() {
     system("clear");
     printf("Opção inválida!\n");
@@ -84,6 +96,8 @@ int main() {
             case 1:
                 cadastraBebida(bebList);
                 break;
+            case 2:
+                mostraBebidas(bebList);
             default:
                 invalidOption();
                 break;
