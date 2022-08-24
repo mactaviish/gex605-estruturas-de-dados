@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include "utils.h"
 
+#define TRUE 1
+#define FALSE 0
+
 void printMenu() {
     system("clear");
     setbuf(stdin, NULL);
@@ -20,51 +23,75 @@ void voltarMenu() {
     setbuf(stdin, NULL);
     printf("\nPressione qualquer tecla para voltar...");
     getchar();
+    system("clear");
 }
 
-void printTitle(char title[50]) {
-    system("clear");
-    printf("%s\n\n", title);
+ListaBebidas *initBebidas() {
+    ListaBebidas *result = malloc(sizeof(ListaBebidas));
+    result->first = NULL;
+    result->last = NULL;
+    return result;
+}
+
+ListaClientes *initClientes() {
+    ListaClientes *result = malloc(sizeof(ListaClientes));
+    result->first = NULL;
+    result->last = NULL;
+    return result;
+}
+
+int existeBebida(ListaBebidas *list) {
+    if (list->first == NULL) {
+        printf("Não há bebidas cadastradas.\n");
+        voltarMenu();
+        return FALSE;
+    }
+    return TRUE;
+}
+
+int existeCliente(ListaClientes *list) {
+    if (list->first == NULL) {
+        printf("Não há clientes cadastrados.\n");
+        voltarMenu();
+        return FALSE;
+    }
+    return TRUE;
 }
 
 Bebida *buscaBebida(ListaBebidas *list, int cod) {
     Bebida *aux = list->first;
+
     while (aux != NULL) {
         if (aux->codigo == cod) {
             return aux;
         }
         aux = aux->next;
     }
-
     return NULL;
 }
 
 Cliente *buscaCliente(ListaClientes *list, int cod) {
     Cliente *aux = list->first;
+
     while (aux != NULL) {
         if (aux->codigo == cod) {
             return aux;
         }
         aux = aux->next;
     }
-
+    printf("Cliente %d não existe!\n\n", cod);
     return NULL;
 }
 
 void cadastraBebida(ListaBebidas *list) {
     Bebida *new = malloc(sizeof(Bebida));
 
-    while (1) {
-        printTitle("Cadastro de Bebidas");
-        printf("Código: ");
-        scanf("%d", &new->codigo);
-        if (buscaBebida(list, new->codigo) != NULL) {
-            printf("Código %d já cadastrado!\n", new->codigo);
-            voltarMenu();
-            continue;
-        } else {
-            break;
-        }
+    printf("Código: ");
+    scanf("%d", &new->codigo);
+
+    if (buscaBebida(list, new->codigo) != NULL) {
+        printf("Código %d já cadastrado!\n", new->codigo);
+        cadastraBebida(list);
     }
 
     printf("Nome: ");
@@ -89,10 +116,7 @@ void cadastraBebida(ListaBebidas *list) {
 void mostraBebida(ListaBebidas *list) {
     Bebida *aux = list->first;
 
-    printTitle("Bebidas");
-    if (aux == NULL) {
-        printf("Nenhuma bebida cadastrada!\n");
-    } else {
+    if (existeBebida(list) == TRUE) {
         while (aux != NULL) {
             printf("Código: %d\n", aux->codigo);
             printf("Nome: %s\n", aux->nome);
@@ -101,42 +125,58 @@ void mostraBebida(ListaBebidas *list) {
             printf("Quantidade: %d\n\n", aux->estoque);
             aux = aux->next;
         }
+        voltarMenu();
     }
-    voltarMenu();
 }
 
 void compraBebida(ListaBebidas *list) {
     int codigo = 0, qtd = 0;
     Bebida *bebida = NULL;
-
-    while (1) {
-        printTitle("Compra de Bebidas");
+    
+    if (existeBebida(list) == TRUE) {
         printf("Código: ");
         scanf("%d", &codigo);
         bebida = buscaBebida(list, codigo);
-        if (bebida == NULL) {
-            printf("Código %d não existe!\n", codigo);
-            voltarMenu();
-            continue;
-        } else {
-            break;
-        }
-    }
 
-    printf("Quantidade: ");
-    scanf("%d", &qtd);
-    bebida->estoque += qtd;
+        if (bebida == NULL) {
+            printf("Código %d não existe!\n\n", codigo);
+            compraBebida(list);
+        }
+
+        printf("Quantidade: ");
+        scanf("%d", &qtd);
+        bebida->estoque += qtd;
+    }
 }
 
 void vendeBebida(ListaBebidas *bebList, ListaClientes *cliList) {
     int cod;
-    Cliente *cli = NULL;
-    printf("Cliente (CPF): ");
-    scanf("%d", &cod);
-    cli = buscaCliente(cliList, cod);
+    Cliente *cli;
+    Bebida *beb;
+    if ((existeBebida(bebList) == TRUE) && (existeCliente(cliList) == TRUE)) {
+        printf("Cliente: ");
+        scanf("%d", &cod);
+        cli = buscaCliente(cliList, cod);
+        if (cli == NULL) {
+            printf("Cliente %d não existe!\n\n", cod);
+            return;
+        }
+        printf("Bebida: ");
+        scanf("%d", &cod);
+        beb = buscaBebida(bebList, cod);
+        if (beb == NULL) {
+            printf("Bebida %d não existe!\n\n", cod);
+            return;
+        }
+        printf("Quantidade: ");
+        scanf("%d", &cod);
+        if (beb->estoque >= cod) {
+            printf("Temos apenas %d em estoque!\n\n", beb->estoque);
+            return;
+        }
 
-    while (1) {
         
+        voltarMenu();
     }
 }
 
@@ -147,16 +187,16 @@ void invalidOption() {
 }
 
 int main() {
-    int opcao;
-    ListaBebidas *bebList = malloc(sizeof(ListaBebidas));
-    bebList->first = NULL;
-    bebList->last = NULL;
+    int opcao = 666;
+    ListaBebidas *bebList = initBebidas();
+    ListaClientes *cliList = initClientes();
 
     while (opcao != 0) {
         printMenu();
 
         scanf("%d", &opcao);
         printf("\n");
+        system("clear");
         switch (opcao) {
             case 1:
                 cadastraBebida(bebList);
