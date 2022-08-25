@@ -1,4 +1,6 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 struct _pilha {
     char link[100];
@@ -7,17 +9,24 @@ struct _pilha {
 };
 typedef struct _pilha Pilha;
 
-void printLast(Pilha *pilha) {
-    if (pilha != NULL) {
+Pilha *printLast(Pilha *pilha) {
+    if (pilha == NULL)
+        printf("Vazio\n");
+    else {
         printf("%s\n", pilha->link);
 
-        pilha = pilha->ant;
-        free(pilha->prox);
-        pilha->prox = NULL;
+        if (pilha->ant == NULL) 
+            pilha = NULL;
+        else {
+            pilha = pilha->ant;
+            free(pilha->prox);
+            pilha->prox = NULL;
+        }
     }
+    return pilha;
 }
 
-void addPilha(Pilha *pilha, char link[100]) {
+Pilha *addPilha(Pilha *pilha, char link[50]) {
     Pilha *novo = malloc(sizeof(Pilha));
     strcpy(novo->link, link);
     novo->ant = pilha;
@@ -26,27 +35,44 @@ void addPilha(Pilha *pilha, char link[100]) {
         pilha->prox = novo;
     }
     pilha = novo;
+    return pilha;
+}
+
+void limparPilha(Pilha *pilha) {
+    Pilha *aux = pilha;
+
+    if (aux == NULL)
+        printf("!\n");
+    else {
+        while (aux != NULL) {
+            printf("@\n");
+            if (aux->ant == NULL) {
+                free(aux);
+                aux = NULL;
+            } else {
+                aux = aux->ant;
+                free(aux->prox);
+            }
+        }
+    }
 }
 
 int main() {
-    char opcao[100] = '';
-    Pilha *pilha = malloc(sizeof(Pilha));
-    pilha->ant = NULL;
-    pilha->prox = NULL;
+    char opcao[50];
+    Pilha *pilha = NULL;
 
-    while (opcao != 'E') {
+    while (1) {
         scanf("%s", &opcao);
 
-        switch (opcao) {
-            case 'E':
-                break;
-            case 'B':
-                printLast(pilha);
-                break;
-            default:
-                addPilha(pilha, opcao);
-                break;
+        if (strcmp(opcao, "E") == 0) {
+            limparPilha(pilha);
+            return 0;
         }
+        else
+        if (strcmp(opcao, "B") == 0)
+            pilha = printLast(pilha);
+        else
+            pilha = addPilha(pilha, opcao);
     }
 
     return 0;
