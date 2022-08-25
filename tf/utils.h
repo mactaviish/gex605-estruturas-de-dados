@@ -9,6 +9,7 @@ struct _bebida {
     int conteudo;
     double preco;
     int estoque;
+    double teor;
     struct _bebida *prev;
     struct _bebida *next;
 };
@@ -34,3 +35,16 @@ typedef struct {
     Cliente *first;
     Cliente *last;
 } ListaClientes;
+
+struct _devedor {
+    Cliente *cli;
+    double valor;
+    struct _devedor *prev;
+    struct _devedor *next;
+};
+typedef struct _devedor Devedor;
+
+typedef struct {
+    Devedor *first;
+    Devedor *last;
+} Caderninho;
