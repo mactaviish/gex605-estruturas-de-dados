@@ -4,6 +4,7 @@
 
 #define TRUE 1
 #define FALSE 0
+#define IDADE_MINIMA 18
 
 void printMenu() {
     system("clear");
@@ -15,6 +16,7 @@ void printMenu() {
     printf("[ 4 ] Vender bebida\n");
     printf("[ 5 ] Cadastrar cliente\n");
     printf("[ 6 ] Mostrar clientes\n");
+    printf("[ 7 ] Mostrar caderninho\n");
     printf("[ 0 ] Sair do sistema\n");
     printf("> ");
 }
@@ -49,7 +51,7 @@ Caderninho *initCaderninho() {
 
 int existeBebida(ListaBebidas *list) {
     if (list->first == NULL) {
-        printf("Não há bebidas cadastradas.\n");
+        printf("Não há bebidas cadastradas!\n");
         voltarMenu();
         return FALSE;
     }
@@ -58,7 +60,16 @@ int existeBebida(ListaBebidas *list) {
 
 int existeCliente(ListaClientes *list) {
     if (list->first == NULL) {
-        printf("Não há clientes cadastrados.\n");
+        printf("Não há clientes cadastrados!\n");
+        voltarMenu();
+        return FALSE;
+    }
+    return TRUE;
+}
+
+int existeCaderninho(Caderninho *list) {
+    if (list->first == NULL) {
+        printf("Não há vendas no caderninho!\n");
         voltarMenu();
         return FALSE;
     }
@@ -130,7 +141,7 @@ void mostraBebida(ListaBebidas *list) {
         while (aux != NULL) {
             printf("Código: %d\n", aux->codigo);
             printf("Nome: %s\n", aux->nome);
-            printf("Conteúdo: %d\n", aux->conteudo);
+            printf("Conteúdo: %dml\n", aux->conteudo);
             printf("Preço: R$%.2lf\n", aux->preco);
             printf("Quantidade: %d\n", aux->estoque);
             printf("Teor Alcóolico: %.2lf%%\n\n", aux->teor);
@@ -152,6 +163,7 @@ void compraBebida(ListaBebidas *list) {
         if (bebida == NULL) {
             printf("Código %d não existe!\n\n", codigo);
             compraBebida(list);
+            return;
         }
 
         printf("Quantidade: ");
@@ -177,21 +189,36 @@ void adicionaCaderninho(Caderninho *cad, Cliente *cli, double valor) {
 
     if (aux == NULL) {
         aux = malloc(sizeof(Devedor));
-        aux->cli->codigo = cli->codigo;
+        aux->cli = cli;
         aux->valor = valor;
+        aux->next = NULL;
+
+        if (cad->first == NULL) {
+            cad->first = aux;
+        } else {
+            cad->last->next = aux;
+            aux->prev = cad->last;
+        }
+
+        cad->last = aux;
     } else {
         aux->valor += valor;
     }
-    
-    if (cad->first == NULL) {
-        cad->first = aux;
-    } else {
-        cad->last->next = aux;
-        aux->prev = cad->last;
-    }
-    cad->last = aux;
 
-    printf("Você já está devendo %.2lf, fica esperto!\n\n", aux->valor);
+    printf("Você já está devendo R$%.2lf, fica esperto!\n\n", aux->valor);
+}
+
+void mostraCaderninho(Caderninho *list) {
+    Devedor *aux = list->first;
+
+    if (existeCaderninho(list) == TRUE) {
+        while (aux != NULL) {
+            printf("Cliente: %d - %s\n", aux->cli->codigo, aux->cli->nome);
+            printf("Valor: R$%.2lf\n\n", aux->valor);
+            aux = aux->next;
+        }
+        voltarMenu();
+    }
 }
 
 void vendeBebida(ListaBebidas *bebList, ListaClientes *cliList, Caderninho *cad) {
@@ -215,8 +242,8 @@ void vendeBebida(ListaBebidas *bebList, ListaClientes *cliList, Caderninho *cad)
             voltarMenu();
             return;
         } else
-        if ((beb->teor > 0) && (cli->idade < 18)) {
-            printf("Cliente %d não pode comprar bebida alcoólica!\n\n", cli->codigo);
+        if ((beb->teor > 0) && (cli->idade < IDADE_MINIMA)) {
+            printf("Cliente '%d - %s' não pode comprar bebida alcoólica!\n\n", cli->codigo, cli->nome);
             voltarMenu();
             return;
         }
@@ -230,12 +257,16 @@ void vendeBebida(ListaBebidas *bebList, ListaClientes *cliList, Caderninho *cad)
         }
         beb->estoque -= qtd;
 
-        if (cli->fiado == 9) {
+        if (cli->fiado == 1) {
             printf("Será no caderninho? (1 - Sim / 2 - Não): ");
             scanf("%d", &cod);
             if (cod == 1) {
                 adicionaCaderninho(cad, cli, beb->preco * qtd);
+            } else {
+                printf("Ficou R$%.2lf, meu consagrado!\n\n", beb->preco * qtd);
             }
+        } else {
+            printf("Ficou R$%.2lf, meu consagrado!\n\n", beb->preco * qtd);
         }
         
         voltarMenu();
@@ -347,6 +378,7 @@ void sair(ListaBebidas *bebList, ListaClientes *cliList, Caderninho *cad) {
 
     qtd = limparBebida(bebList) + limparCliente(cliList) + limparCaderninho(cad);
     printf("%d elementos foram liberados da memória!\n\n", qtd);
+    printf("Até mais!\n");
 }
 
 void invalidOption() {
@@ -385,6 +417,9 @@ int main() {
                 break;
             case 6:
                 mostraCliente(cliList);
+                break;
+            case 7:
+                mostraCaderninho(cad);
                 break;
             case 0:
                 sair(bebList, cliList, cad);
